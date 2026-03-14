@@ -681,7 +681,9 @@ button {
 .device-cards,
 .room-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    /* Cap columns to a maximum of 12 on very wide screens, and be responsive downward
+       so the grid never forces horizontal scroll. Adjust column counts with breakpoints. */
+    grid-template-columns: repeat(12, minmax(0, 1fr));
     gap: 14px;
     margin-top: 16px;
 }
@@ -755,7 +757,8 @@ body.full-screen #app {
 .modal-body input { width: 100% }
 
 @media (max-width: 900px) {
-    .device-cards { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+    /* fewer columns on medium screens */
+    .device-cards { grid-template-columns: repeat(6, minmax(0, 1fr)); }
 }
 
 @media (max-width: 560px) {
@@ -769,6 +772,31 @@ body.full-screen #app {
     .device-card, .room-card { padding: 12px }
     .device-card .actions { justify-content: flex-start }
 }
+
+/* Additional breakpoints to progressively reduce columns and avoid horizontal scroll */
+@media (max-width: 1200px) {
+    .device-cards, .room-cards { grid-template-columns: repeat(8, minmax(0, 1fr)); }
+}
+@media (max-width: 1000px) {
+    .device-cards, .room-cards { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+}
+@media (max-width: 800px) {
+    .device-cards, .room-cards { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+@media (max-width: 480px) {
+    .device-cards, .room-cards { 
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        /* limit to maximum 12 items (2 columns x 6 rows) and hide the rest */
+        overflow: hidden;
+    }
+    /* hide any cards beyond the 12th so there are at most 6 rows */
+    .device-cards > *:nth-child(n+13), .room-cards > *:nth-child(n+13) {
+        display: none !important;
+    }
+}
+
+/* Prevent horizontal scroll on narrow viewports */
+.device-cards, .room-cards { overflow-x: hidden; }
 
 /* Mobile UX improvements */
 .manage-title { margin-top: 8px; margin-bottom: 12px }
