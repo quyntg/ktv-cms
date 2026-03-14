@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Quản trị - Tài khoản</title>
+    <link rel="stylesheet" href="../style/style.css">
+</head>
+<body>
+    <div class="page admin-full">
+    <div class="manage-header">
+        <div class="account" id="accountRoot">
+            <button id="accountBtn" class="btn small">Tài khoản</button>
+            <div class="account-menu" id="accountMenu" aria-hidden="true">
+                <div class="account-name" id="accountName">--</div>
+                <button id="logoutBtn" class="btn">Đăng xuất</button>
+            </div>
+        </div>
+    </div>
+    <div class="manage-title">Danh sách tài khoản</div>
+    <div style="margin-right:auto; margin-bottom:12px;">
+        <button id="addUserBtn" class="btn">Thêm tài khoản</button>
+    </div>
+    <div class="card">
+        <div class="table-wrap">
+            <table class="responsive-table">
+                <thead>
+                    <tr>
+                        <th>STT</th>
+                        <th>Tên khách hàng</th>
+                        <th>Tên tài khoản</th>
+                        <th>Mật khẩu</th>
+                        <th>SĐT</th>
+                        <th>Email tài khoản</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="userTable"></tbody>
+            </table>
+        </div>
+    </div>
+    </div>
+</body>
+</html>

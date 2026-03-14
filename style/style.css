@@ -1,0 +1,942 @@
+:root {
+    --accent: #6c5ce7;
+    --accent-2: #00b894;
+    --bg: #f6f8fb;
+    --card: #ffffff;
+    --muted: #65748b;
+    --footer-height: 72px;
+}
+
+/* Reset & base */
+* {
+    box-sizing: border-box;
+}
+html,
+body {
+    height: 100%;
+}
+body {
+    margin: 0;
+    font-family: Inter, system-ui, Arial, sans-serif;
+    background: var(--bg);
+    /* kept for optional decorative accent if needed; remove by setting display:none in JS/CSS if desired */
+    display: block;
+    padding-bottom: calc(var(--footer-height) + 24px); /* prevent fixed footer overlapping content */
+}
+#app {
+
+/* Floating action buttons for display view */
+.display-fab {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 12000;
+}
+.fab {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    border: 0;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    cursor: pointer;
+    box-shadow: 0 12px 30px rgba(2,6,23,0.24);
+}
+.fab.fab-full {
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+}
+.fab.fab-logout {
+    background: linear-gradient(90deg, #ef4444, #f97316);
+}
+
+/* hide footer when in display fullscreen mode */
+.display-fullscreen .index-footer { display: none !important }
+    width: 100%;
+    max-width: 1100px;
+    padding: 20px;
+    margin: 0 auto;
+}
+    /* Larger, touch-friendly styles for small screens */
+    @media (max-width: 600px) {
+        body { font-size: 17px }
+        .manage-title { font-size: 20px; margin-bottom: 14px }
+        .device-card { padding: 18px; border-radius: 14px }
+        .device-card h4 { font-size: 18px }
+        .device-card .meta { font-size: 15px; color: #4b5563 }
+        .device-card .actions { gap: 10px }
+        .device-card .actions button { padding: 12px 14px; font-size: 15px }
+        .btn { padding: 14px 16px; font-size: 15px }
+        .account .small { padding: 8px 10px }
+        .modal-card { padding: 18px }
+        #modal-body input { font-size: 17px; padding: 12px }
+    }
+
+
+/* Simple header/nav */
+nav {
+    background: #111827;
+    color: #fff;
+    padding: 10px;
+    width: 100%;
+}
+nav a {
+    color: #fff;
+    margin-right: 20px;
+    text-decoration: none;
+}
+
+/* Layout helpers */
+.container {
+    width: 100%;
+    max-width: 420px;
+    margin: auto;
+}
+
+/* Utility to vertically center content (used on login page) */
+.container.center-vertical {
+    min-height: calc(100vh - var(--footer-height));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+
+/* Page wrapper: keep mobile full-width, center and constrain on larger screens */
+.page {
+    width: 100%;
+    padding: 16px;
+    box-sizing: border-box;
+    background: transparent; /* default: no card on small screens */
+}
+
+@media (min-width: 800px) {
+    .page {
+        max-width: 1100px;
+        margin: 28px auto; /* avoid extra bottom margin that caused overflow */
+        padding: 24px;
+        background: #ffffff; /* raised card */
+        border-radius: 12px;
+        box-shadow: 0 18px 40px rgba(2,6,23,0.08), 0 6px 18px rgba(2,6,23,0.04);
+        border: 1px solid rgba(15, 23, 42, 0.04);
+          /* ensure card fills available viewport when content is small,
+              but still limits and scrolls when content is larger; reserve footer */
+          min-height: calc(100vh - var(--footer-height) - 64px);
+          max-height: calc(100vh - var(--footer-height) - 64px); /* keep card from exceeding viewport */
+        overflow: auto;
+    }
+}
+
+/* Admin page: full-width layout */
+.page.admin-full {
+    max-width: 100% !important;
+    margin: 0 !important;
+    padding: 18px 20px !important;
+    background: transparent !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+}
+.page.admin-full .card {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+    padding: 0;
+    max-width: none; /* allow full-bleed */
+    width: 100%;
+}
+.page.admin-full .table-wrap { overflow: auto; -webkit-overflow-scrolling: touch; }
+
+/* Modern full-width responsive table for admin */
+.page.admin-full .responsive-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 12px 40px rgba(2,6,23,0.06);
+}
+.page.admin-full .responsive-table thead th {
+    background: linear-gradient(90deg, rgba(108,92,231,0.95), rgba(0,184,148,0.95));
+    color: #fff;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 13px;
+    padding: 14px 18px;
+    text-align: left;
+    position: sticky;
+    top: 0;
+    z-index: 3;
+    text-align: center;
+}
+.page.admin-full .responsive-table tbody td {
+    padding: 14px 18px;
+    background: #fff;
+    color: #0f172a;
+    border-bottom: 1px solid #eef2f7;
+    vertical-align: middle;
+}
+.page.admin-full .responsive-table tbody tr:hover td {
+    background: rgba(108,92,231,0.03);
+}
+.page.admin-full .responsive-table tr:nth-child(even) td { background: #fbfbff }
+.page.admin-full .responsive-table td:first-child { width: 64px; font-weight:700; color: #444 }
+.page.admin-full .responsive-table td:last-child { width: 140px; text-align: center }
+
+/* Button styles inside admin table */
+.page.admin-full .btn.small { padding: 8px 12px; font-size: 13px; border-radius: 10px }
+.page.admin-full .btn.small + .btn.small { margin-left: 8px }
+
+/* Small-screen: convert rows to card-like blocks for readability */
+@media (max-width: 880px) {
+    .page.admin-full .responsive-table { border-radius: 8px }
+    .page.admin-full .responsive-table thead { display: none }
+    .page.admin-full .responsive-table tbody tr { display: block; margin: 10px 0; box-shadow: 0 6px 18px rgba(2,6,23,0.06); border-radius: 10px; overflow: hidden }
+    .page.admin-full .responsive-table tbody td { display: flex; justify-content: space-between; padding: 12px 14px }
+    .page.admin-full .responsive-table tbody td:before { display: none }
+}
+
+/* Card */
+.card {
+    background: linear-gradient(180deg, #fbf8ff 0%, #f1eeff 100%);
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(17, 24, 39, 0.1);
+    padding: 28px;
+    border: 3px solid rgba(108, 92, 231, 0.18);
+    width: 100%;
+    max-width: 420px;
+    box-sizing: border-box;
+    color: #0f172a;
+}
+
+/* Slightly wider card specifically for login to avoid radio wrapping */
+.login-card {
+    min-width: 450px;
+}
+
+/* Brand for login */
+.brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+.logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.logo-img {
+    width: 100px;
+    height: 60px;
+    border-radius: 12px;
+    padding: 6px;
+    display: block;
+    background: linear-gradient(
+        135deg,
+        rgba(108, 92, 231, 0.06),
+        rgba(0, 184, 148, 0.04)
+    );
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.12);
+}
+h1 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 700;
+}
+p.lead {
+    margin: 6px 0 18px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+form {
+    display: grid;
+    gap: 16px;
+}
+input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 1px solid rgba(108, 92, 231, 0.18);
+    border-radius: 10px;
+    font-size: 15px;
+}
+
+/* Login mode select styling */
+.login-mode-row {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin: 8px 0 12px 0;
+}
+.login-mode-label {
+    font-weight: 600;
+    color: #243044;
+    min-width: 70px;
+}
+.login-mode-radio {
+    display: inline-flex;
+    gap: 8px;
+    align-items: center;
+    padding: 6px 10px;
+    border-radius: 10px;
+    border: 1px solid rgba(108,92,231,0.06);
+    background: linear-gradient(180deg, #fff, #fbfbff);
+    font-weight: 600;
+    color: #0f172a;
+    min-width: 150px;
+     /* ensure radio group doesn't wrap on small screens; allow horizontal scroll if needed */
+     overflow-x: auto;
+     padding-right: 12px;
+}
+.login-mode-radio input[type="radio"]{
+    width: 16px; height: 16px;
+}
+/* Ensure select fills remaining space on small screens */
+@media (max-width: 560px) {
+    .login-mode-row { flex-direction: column; align-items: stretch }
+    .login-mode-radio { width: 100%; justify-content: flex-start }
+}
+
+.row {
+    display: flex;
+    gap: 8px;
+}
+
+/* consistent vertical spacing between direct children of a card */
+.card > * {
+    margin-bottom: 16px;
+}
+.card > *:last-child {
+    margin-bottom: 0;
+}
+
+/* Buttons */
+.btn {
+    background: linear-gradient(90deg, var(--accent) 0%, var(--accent-2) 100%);
+    color: #fff;
+    padding: 12px 16px;
+    border-radius: 12px;
+    border: 0;
+    font-weight: 700;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    box-shadow: 0 8px 20px rgba(108, 92, 231, 0.12);
+    transition: transform 0.16s, box-shadow 0.16s;
+}
+.card .btn {
+    width: 100%;
+}
+.btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 14px 30px rgba(108, 92, 231, 0.16);
+}
+.btn:active {
+    transform: translateY(-1px) scale(0.996);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}
+.secondary {
+    background: transparent;
+    border: 1px solid #e6eef8;
+    color: var(--muted);
+}
+
+/* Loading state for buttons */
+.btn.loading {
+    pointer-events: none;
+    opacity: 0.9;
+}
+.btn.loading::after {
+    content: "";
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border: 2px solid rgba(255, 255, 255, 0.35);
+    border-top-color: #fff;
+    border-radius: 50%;
+    margin-left: 8px;
+    animation: spin 0.9s linear infinite;
+}
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Disabled button appearance */
+.btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Tables */
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+td,
+th {
+    border: 1px solid #ddd;
+    padding: 10px;
+}
+
+/* Responsive table wrapper for admin */
+.table-wrap { overflow: auto; -webkit-overflow-scrolling: touch; }
+.responsive-table { width: 100%; border-collapse: collapse; }
+.responsive-table th { background: linear-gradient(90deg, rgba(108,92,231,0.06), rgba(0,184,148,0.03)); font-weight:700; }
+.responsive-table tr:nth-child(even) { background: rgba(0,0,0,0.02); }
+.responsive-table td, .responsive-table th { white-space: nowrap; }
+
+@media (max-width: 600px) {
+    .responsive-table td, .responsive-table th { padding: 8px; font-size: 13px }
+    .card { padding: 14px }
+}
+
+/* Footer */
+.site-footer {
+    text-align: center;
+    padding: 12px 8px;
+    font-size: 13px;
+    color: #666;
+}
+.index-footer {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: var(--footer-height);
+    background: linear-gradient(90deg, var(--accent), var(--accent-2));
+    color: white;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.12);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+.index-footer .footer-inner {
+    max-width: 1100px;
+    margin: 0 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+}
+.footer-logo {
+    width: 100px;
+    height: 50px;
+    object-fit: contain;
+}
+.footer-text {
+    font-size: 14px;
+}
+
+/* Display page */
+header {
+    text-align: center;
+    padding: 20px;
+    font-size: 40px;
+    font-weight: bold;
+}
+.clock {
+    font-size: 22px;
+    margin-top: 10px;
+    color: black;
+}
+.rooms {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 20px;
+}
+.room {
+    border-radius: 12px;
+    padding: 25px;
+    text-align: center;
+    font-size: 22px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+.room h2 {
+    margin: 0 0 10px 0;
+    font-size: 28px;
+}
+.status {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+/* Display page: owner header and centered room cards */
+.display-header {
+    text-align: center;
+    padding: 18px 12px 8px 12px;
+}
+.display-owner {
+    font-size: 40px;
+    font-weight: 900;
+    color: var(--accent);
+    margin-bottom: 6px;
+}
+.display-owner {
+    font-family: 'Cinzel', serif;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    text-shadow: 0 4px 18px rgba(0,0,0,0.18);
+}
+.display-header,
+.display-bg .display-header {
+    /* semi-opaque panel so header text stays readable over any background */
+    background: rgba(255,255,255,0.86);
+    padding: 18px 20px;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(2,6,23,0.18);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 1100px;
+    margin: 0 auto 12px auto;
+}
+
+/* Preview modal/backdrop for control view */
+.preview-backdrop {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0,0,0,0.5);
+    z-index: 20000;
+    padding: 24px;
+}
+.preview-card {
+    width: 100%;
+    max-width: 1100px;
+    max-height: calc(100vh - 80px);
+    overflow: auto;
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 20px 60px rgba(2,6,23,0.18);
+    padding: 12px 18px 28px 18px;
+    box-sizing: border-box;
+}
+
+.rooms .room {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 140px;
+    /* modern decorative card with frame background */
+    background-image: url('../data/frame.png'), linear-gradient(180deg, rgba(255,255,255,0.96), rgba(250,250,250,0.9));
+    background-repeat: no-repeat, no-repeat;
+    /* make frame image stretch to exactly fit the card element */
+    background-position: center center, center;
+    background-size: 100% 100%, 100% 100%;
+    /* ensure the background covers the element including borders/padding */
+    background-origin: border-box;
+    background-clip: border-box;
+    border-radius: 16px;
+    border: 1px solid rgba(2,6,23,0.06);
+    box-shadow: 0 22px 50px rgba(2,6,23,0.16);
+    padding: 36px 28px;
+    position: relative;
+    overflow: visible;
+    backdrop-filter: blur(6px) saturate(120%);
+}
+.rooms .room h2 { font-size: 20px; font-weight:700; }
+.rooms .room .guest-name { font-size: 24px; font-weight: 900; color: black }
+.rooms .room .room-time { color: var(--muted); font-size: 16px }
+
+@media (max-width: 720px) {
+    .rooms { grid-template-columns: 1fr }
+    .display-owner { font-size: 32px }
+}
+
+/* Dark-mode friendly variants when body has dark theme */
+body.dark .display-header,
+body.dark .display-bg .display-header {
+    background: rgba(6,10,18,0.64);
+    color: #fff;
+}
+body.dark .rooms .room {
+    background: rgba(12,18,28,0.6);
+    border: 1px solid rgba(255,255,255,0.04);
+    color: #fff;
+}
+
+/* Background for display page */
+.display-bg {
+    background-image: url('../data/1.jpg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+}
+.empty {
+    background: #2ecc71;
+    color: white;
+}
+.using {
+    background: #e74c3c;
+    color: white;
+}
+.booked {
+    background: #f1c40f;
+}
+.cleaning {
+    background: #95a5a6;
+    color: white;
+}
+
+body.dark {
+    background: #0f172a;
+    color: white;
+}
+body.dark .room {
+    background: #1e293b;
+}
+body.light {
+    background: white;
+    color: black;
+}
+body.light .room {
+    background: #f4f6f8;
+}
+
+/* Manage tweaks */
+input {
+    padding: 8px;
+    margin-right: 8px;
+}
+button {
+    padding: 8px 12px;
+}
+.manage-table {
+    margin-top: 16px;
+}
+
+/* Manage header + account dropdown */
+.manage-header {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-bottom: 18px;
+}
+.manage-title {
+    font-size: 20px;
+    font-weight: 800;
+}
+.manage-controls {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    margin: 12px 0 12px 0;
+    flex-wrap: wrap;
+}
+.account {
+    position: relative;
+}
+.account .small {
+    padding: 8px 10px;
+    font-size: 13px;
+}
+.account-menu {
+    position: absolute;
+    right: 0;
+    top: calc(100% + 8px);
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 12px 30px rgba(11, 15, 26, 0.12);
+    padding: 10px;
+    min-width: 160px;
+    display: none;
+    flex-direction: column;
+    gap: 8px;
+    z-index: 2000;
+}
+.account-menu .account-name {
+    font-weight: 700;
+    color: #222;
+}
+.account-menu.show {
+    display: flex;
+}
+
+/* Card grid for devices and rooms */
+.device-cards,
+.room-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+    margin-top: 16px;
+}
+.device-card,
+.room-card {
+    background: linear-gradient(180deg, #fff, #fbfbff);
+    border-radius: 12px;
+    padding: 12px;
+    box-shadow: 0 8px 20px rgba(11, 15, 26, 0.06);
+    border: 2px solid rgba(15, 23, 42, 0.04);
+}
+.device-card h4,
+.room-card h4 {
+    margin: 0 0 8px 0;
+    font-size: 16px;
+}
+.device-card .meta,
+.room-card .meta {
+    font-size: 13px;
+    color: var(--muted);
+}
+
+/* Empty room label */
+.room-empty {
+    color: var(--muted);
+    font-weight: 700;
+}
+.device-card .actions,
+.room-card .actions {
+    margin-top: 12px;
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+}
+
+@media (max-width: 420px) {
+    .card {
+        padding: 20px;
+    }
+}
+
+/* Full-screen app mode used by manage page */
+body.full-screen {
+    display: block !important;
+    padding: 12px 20px 20px 20px;
+    min-height: calc(100vh - var(--footer-height));
+}
+body.full-screen #app {
+    width: 100%;
+    max-width: none;
+    min-height: calc(100vh - var(--footer-height));
+    margin: 0;
+    padding: 14px 12px 20px;
+}
+
+/* Manage page responsive tweaks */
+.manage-title { font-size: 20px; font-weight:800; margin: 12px 0 8px 0 }
+.manage-header { padding: 8px 0 }
+
+/* make controls stack on small screens */
+.manage-controls { gap:8px; align-items:center; margin-bottom:12px; flex-wrap:wrap }
+.manage-controls .btn { white-space:nowrap }
+
+/* Card grid adjustments */
+.device-cards, .room-cards { gap: 12px }
+.device-card, .room-card { padding: 14px }
+.device-card h4, .room-card h4 { font-size: 16px }
+
+/* Modal mobile tweaks */
+.modal-card { padding: 18px }
+.modal-body input { width: 100% }
+
+@media (max-width: 900px) {
+    .device-cards { grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); }
+}
+
+@media (max-width: 560px) {
+    body.full-screen #app { padding: 12px }
+    .manage-header { justify-content: space-between }
+    .manage-title { text-align: left; font-size: 18px }
+    .account .small { padding: 6px 8px; font-size: 13px }
+    .manage-controls { flex-direction: column; align-items: stretch }
+    .manage-controls .btn { width: 100% }
+    .device-cards { grid-template-columns: 1fr }
+    .device-card, .room-card { padding: 12px }
+    .device-card .actions { justify-content: flex-start }
+}
+
+/* Mobile UX improvements */
+.manage-title { margin-top: 8px; margin-bottom: 12px }
+.device-card { font-size: 15px }
+.device-card .meta { font-size: 14px }
+.device-card .actions { gap: 8px; }
+.device-card .actions button { padding: 10px 12px }
+
+body.full-screen { overflow: auto; -webkit-overflow-scrolling: touch; display: block !important }
+.manage-header { padding: 8px 6px }
+.manage-title { margin-top: 8px; margin-bottom: 12px }
+.device-card { font-size: 15px }
+.device-card .meta { font-size: 14px }
+.device-card .actions { gap: 8px; }
+.device-card .actions button { padding: 10px 12px }
+
+@media (max-width: 420px) {
+    .manage-header { padding: 6px }
+    .manage-title { font-size: 16px }
+    .device-card { padding: 14px }
+    .device-card .actions { flex-direction: column; align-items: stretch }
+    .device-card .actions button { width: 100%; text-align: center }
+    .modal-card { width: 96%; padding: 12px }
+    #modal-body input { font-size: 16px; padding: 12px }
+    .btn { padding: 12px 14px }
+}
+
+/* mobile footer smaller so it doesn't dominate viewport */
+@media (max-width: 560px) {
+    .index-footer { height: 56px }
+    body { padding-bottom: 56px }
+    .footer-logo { width: 72px; height: 36px }
+}
+
+@media (max-width: 420px) {
+    .modal-card { width: 94%; padding: 14px }
+    .footer-logo { width: 80px; height: 40px }
+    .index-footer { height: 64px }
+}
+
+/* Modal styles */
+/* Modern modal */
+.modal-backdrop {
+    position: fixed;
+    inset: 0;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(
+        180deg,
+        rgba(2, 6, 23, 0.6),
+        rgba(2, 6, 23, 0.4)
+    );
+    z-index: 10000;
+    backdrop-filter: blur(6px) saturate(120%);
+}
+.modal-card {
+    background: linear-gradient(180deg, #ffffff, #fbfbff);
+    border-radius: 14px;
+    padding: 26px;
+    width: 92%;
+    max-width: 560px;
+    box-shadow: 0 20px 50px rgba(11, 15, 26, 0.45);
+    border: 1px solid rgba(108, 92, 231, 0.08);
+}
+.modal-title {
+    font-weight: 800;
+    margin-bottom: 8px;
+    font-size: 18px;
+    color: #0f172a;
+}
+.modal-body {
+    margin-bottom: 18px;
+    color: #273244;
+    line-height: 1.45;
+}
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: flex-end;
+}
+.modal-actions .btn {
+    padding: 10px 14px;
+    border-radius: 10px;
+}
+.modal-actions .secondary {
+    background: transparent;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    color: var(--muted);
+}
+
+/* Modal form tweaks to match manage styling */
+.modal-body form {
+    display: grid;
+    gap: 12px;
+}
+.modal-body label { font-weight: 600; color: #243044 }
+.modal-body input[type="text"], .modal-body input[type="datetime-local"]{
+    width: 100%;
+    padding: 12px 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(108, 92, 231, 0.12);
+    font-size: 15px;
+}
+
+/* Status radio group styled as inline chips */
+.status-group {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.status-group label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 10px;
+    border-radius: 10px;
+    background: linear-gradient(180deg, #fff, #fbfbff);
+    border: 1px solid rgba(15, 23, 42, 0.04);
+    cursor: pointer;
+    font-weight: 700;
+    color: #243044;
+}
+.status-group input[type="radio"]{
+    width: 16px;
+    height: 16px;
+    accent-color: var(--accent);
+}
+
+@media (max-width: 420px) {
+    .status-group { gap: 8px }
+    .status-group label { padding: 8px 10px; font-size: 14px }
+}
+
+/* Keep status radios on one line on narrow screens, allow horizontal scroll if needed */
+@media (max-width: 560px) {
+    /* stack radios vertically on small screens so labels are fully visible */
+    .status-group {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+        overflow: visible;
+        padding-right: 0;
+    }
+    .status-group label {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 8px;
+        padding: 8px 10px;
+        width: 100%;
+        white-space: normal;
+        min-width: 0;
+    }
+    .status-group::after { content: none }
+    .status-group::-webkit-scrollbar { height: 6px }
+}
+
+/* nicer entrance */
+@keyframes modal-pop {
+    from { transform: translateY(-8px) scale(0.99); opacity: 0 }
+    to { transform: translateY(0) scale(1); opacity: 1 }
+}
+.modal-card { animation: modal-pop 180ms ease both }
+
+@media (max-width: 560px) {
+    .modal-card { max-width: 96%; padding: 18px }
+    .modal-actions { justify-content: center; flex-wrap: wrap }
+    .modal-actions .btn { width: 100%; max-width: 240px }
+}

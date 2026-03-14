@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+	<meta charset="UTF-8">
+	<title>Quản lý phòng</title>
+	<link rel="stylesheet" href="../style/style.css">
+</head>
+<body>
+	<div class="page">
+	<div class="manage-header">
+		<div class="account" id="accountRoot">
+			<button id="accountBtn" class="btn small">Tài khoản</button>
+			<div class="account-menu" id="accountMenu" aria-hidden="true">
+				<div class="account-name" id="accountName">--</div>
+				<button id="logoutBtn" class="btn">Đăng xuất</button>
+			</div>
+		</div>
+	</div>
+
+	<div class="manage-title">Danh sách phòng</div>
+
+	<section class="devices">
+		<div class="manage-controls">
+			<button id="addRoomBtn" class="btn">Thêm phòng</button>
+			<button id="chooseWallpaperBtn" class="btn">Chọn hình nền</button>
+			<button id="chooseBorderBtn" class="btn">Chọn khung</button>
+		</div>
+
+		<!-- Selected preview row -->
+		<div class="selection-row" style="margin:12px 0 18px; display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
+			<div id="selectedWallpaper" attr-link="" style="color:var(--muted)">Hình nền: <strong>--</strong></div>
+			<div id="selectedBorder" attr-link="" style="color:var(--muted)">Khung: <strong>--</strong></div>
+			<button id="previewDisplayBtn" class="btn" style="margin-left:auto;">Xem thử giao diện</button>
+		</div>
+
+		<div id="roomList" class="room-cards"></div>
+	</section>
+
+	<!-- Display preview modal (12 fixed rooms) -->
+	<div id="displayPreview" class="preview-backdrop" aria-hidden="true" style="display:none;">
+		<div class="preview-card">
+			<button id="closePreview" class="secondary" style="float:right;">Đóng</button>
+			<header class="display-header">
+				<div class="display-owner" id="previewOwner">Demo Hotel</div>
+				<div class="clock" id="previewClock"></div>
+			</header>
+			<div class="rooms" id="previewRooms" style="padding:20px"></div>
+		</div>
+	</div>
+
+	<!-- preview and selection logic handled in ../js/main.js -->
+
+	<!-- Add / Edit Room Modal -->
+	<div id="roomModal" class="modal-backdrop" aria-hidden="true" style="display:none;">
+		<div class="modal-card">
+			<div class="modal-title" id="modalTitle">Thêm phòng</div>
+			<div class="modal-body">
+				<form id="roomForm">
+                    <div class="status-group" style="margin-bottom:10px">
+                        <label style="display:block;margin-bottom:6px">Trạng thái</label>
+                        <label style="margin-right:12px"><input type="radio" name="roomStatus" value="no_guest" checked /> Chưa có khách</label>
+                        <label><input type="radio" name="roomStatus" value="has_guest" /> Có khách</label>
+                    </div>
+
+                    <label style="display:block;margin-bottom:8px">Tên phòng<br>
+                        <input type="text" id="roomName" required />
+                    </label>
+
+                    <label style="display:block;margin-bottom:8px">Tên khách<br>
+                        <input type="text" id="guestName" />
+                    </label>
+
+                    <label style="display:block;margin-bottom:8px">Thời gian<br>
+                        <input type="text" id="roomTime" placeholder="Ví dụ: 14:00 - 15:00" />
+                    </label>
+				</form>
+			</div>
+			<div class="modal-actions">
+				<button id="cancelBtn" class="secondary">Hủy</button>
+				<button form="roomForm" class="btn">Lưu</button>
+			</div>
+		</div>
+</div>
+</body>
+</html>
