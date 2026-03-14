@@ -584,6 +584,41 @@ function renderCard(id, d) {
 	card.appendChild(actions)
 }
 
+// Enforce mobile card limit: at most 12 items (2 columns x 6 rows) on narrow viewports
+function applyMobileCardLimit() {
+	try {
+		const mq = window.matchMedia('(max-width: 480px)')
+		const shouldLimit = mq.matches
+		;['.device-cards', '.room-cards'].forEach(sel => {
+			const container = document.querySelector(sel)
+			if (!container) return
+			const children = Array.from(container.children)
+			if (!shouldLimit) {
+				children.forEach(c => c.style.display = '')
+				return
+			}
+			children.forEach((c, i) => {
+				if (i >= 12) c.style.display = 'none'
+				else c.style.display = ''
+			})
+		})
+	} catch(e) { /* ignore */ }
+}
+
+// Watch for dynamic changes and re-apply mobile limit
+try {
+	const obsTargets = []
+	const addIf = (sel) => { const el = document.querySelector(sel); if (el) obsTargets.push(el) }
+	addIf('.device-cards'); addIf('.room-cards')
+	if (obsTargets.length) {
+		const mo = new MutationObserver(() => applyMobileCardLimit())
+		obsTargets.forEach(t => mo.observe(t, { childList: true }))
+		window.addEventListener('resize', applyMobileCardLimit)
+		// initial apply
+		setTimeout(applyMobileCardLimit, 200)
+	}
+} catch(e) { /* ignore */ }
+
 async function initManage() {
 	// rooms removed from manage page
 	const accountBtn = document.getElementById('accountBtn')
