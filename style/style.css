@@ -562,7 +562,7 @@ header {
 .rooms .room .room-time { color: var(--muted); font-size: 16px }
 
 @media (max-width: 720px) {
-    .rooms { grid-template-columns: 1fr }
+    /* .rooms { grid-template-columns: 1fr } */
     .display-owner { font-size: 32px }
 }
 
@@ -797,6 +797,19 @@ body.full-screen #app {
 
 /* Prevent horizontal scroll on narrow viewports */
 .device-cards, .room-cards { overflow-x: hidden; }
+
+/* Strong override: ensure two columns on narrow viewports (mobile emulation) */
+@media (max-width: 480px) {
+    .page .device-cards, .page .room-cards {
+        grid-template-columns: repeat(2, 1fr) !important;
+        grid-auto-flow: row !important;
+    }
+    .page .device-cards > *, .page .room-cards > * {
+        box-sizing: border-box;
+        width: auto !important;
+        max-width: 100% !important;
+    }
+}
 
 /* Mobile UX improvements */
 .manage-title { margin-top: 8px; margin-bottom: 12px }

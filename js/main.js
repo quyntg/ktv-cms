@@ -619,6 +619,27 @@ try {
 	}
 } catch(e) { /* ignore */ }
 
+// Force two columns on narrow viewports by setting inline style (overrides CSS rules)
+function enforceTwoColumnsMobile() {
+	try {
+		const isMobile = window.innerWidth <= 480
+		;['.device-cards', '.room-cards'].forEach(sel => {
+			const el = document.querySelector(sel)
+			if (!el) return
+			if (isMobile) {
+				el.style.setProperty('grid-template-columns', 'repeat(2, 1fr)', 'important')
+				el.style.setProperty('overflow', 'hidden')
+			} else {
+				el.style.removeProperty('grid-template-columns')
+				el.style.removeProperty('overflow')
+			}
+		})
+	} catch(e) { /* ignore */ }
+}
+
+window.addEventListener('resize', () => { enforceTwoColumnsMobile(); applyMobileCardLimit() })
+setTimeout(() => { enforceTwoColumnsMobile(); applyMobileCardLimit() }, 150)
+
 async function initManage() {
 	// rooms removed from manage page
 	const accountBtn = document.getElementById('accountBtn')
