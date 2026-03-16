@@ -676,14 +676,16 @@ button {
 .account-menu.show {
     display: flex;
 }
-
+.device-cards {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+.room-cards {
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+}
 /* Card grid for devices and rooms */
 .device-cards,
 .room-cards {
     display: grid;
-    /* Cap columns to a maximum of 12 on very wide screens, and be responsive downward
-       so the grid never forces horizontal scroll. Adjust column counts with breakpoints. */
-    grid-template-columns: repeat(12, minmax(0, 1fr));
     gap: 14px;
     margin-top: 16px;
 }
