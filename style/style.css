@@ -457,7 +457,7 @@ header {
 .rooms {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
+    gap: 20px;
     padding: 20px;
 }
 .room {
