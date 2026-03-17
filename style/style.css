@@ -462,7 +462,6 @@ header {
 }
 .room {
     border-radius: 12px;
-    padding: 25px;
     text-align: center;
     /* responsive base font size: scales with viewport but clamped to reasonable bounds */
     font-size: clamp(14px, calc(0.9vh + 0.6vw), 22px);
@@ -553,7 +552,7 @@ header {
     box-shadow: 0 22px 50px rgba(2,6,23,0.16);
     position: relative;
     overflow: visible;
-    /* padding: 36px 28px; */
+    padding: 36px 28px;
     backdrop-filter: blur(6px) saturate(120%);
 }
 .rooms .room h2 {
