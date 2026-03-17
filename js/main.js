@@ -1694,7 +1694,7 @@ function initDisplay() {
 						const name = r.name || ''
 						const guest = r.guest || ''
 						const time = r.time || ''
-						room.innerHTML = `\n<h2 style="color: black; margin-bottom: 0">${name}</h2>\n<div class="guest-name">${guest || 'Phòng trống'}</div>\n<div class="room-time">${time}</div>\n`
+						room.innerHTML = `\n<h2 style="color: black;">${name}</h2>\n<div class="guest-name">${guest || 'Phòng trống'}</div>\n<div class="room-time">${time}</div>\n`
 						// apply border as room background if available
 						try {
 							if (displayBorderLink) {
