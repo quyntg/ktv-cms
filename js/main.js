@@ -1694,7 +1694,7 @@ function initDisplay() {
 						const name = r.name || ''
 						const guest = r.guest || ''
 						const time = r.time || ''
-						room.innerHTML = `\n<h2 style="color: black;">${name}</h2>\n<div class="guest-name">${guest || 'Phòng trống'}</div>\n<div class="room-time">${time}</div>\n`
+						room.innerHTML = `\n<h2 style="color: black; margin-bottom: 0">${name}</h2>\n<div class="guest-name">${guest || 'Phòng trống'}</div>\n<div class="room-time">${time}</div>\n`
 						// apply border as room background if available
 						try {
 							if (displayBorderLink) {
@@ -1800,3 +1800,45 @@ function autoLoginFromStorage() {
 autoLoginFromStorage()
 // initial route
 handleHash()
+
+// --- Display layout initializer (sets grid rows/cols based on viewport) ---
+function initDisplayLayout() {
+	try {
+		const isDisplay = document.body && document.body.classList && document.body.classList.contains('display-page')
+		if (!isDisplay) return
+		const rooms = document.getElementById('rooms')
+		const header = document.querySelector('.display-header')
+		const footer = document.querySelector('.index-footer')
+		const cssFooter = getComputedStyle(document.documentElement).getPropertyValue('--footer-height') || '72px'
+		const footerHeight = footer ? footer.offsetHeight : parseInt(cssFooter, 10) || 72
+
+		function updateLayout() {
+			if (!rooms || !header) return
+			const w = window.innerWidth
+			// default layout: 4x3 (cols x rows)
+			let cols = 4, rows = 3
+			// If viewport is portrait (height > width) or narrow, use 2 columns x 6 rows
+			const portrait = window.innerHeight > window.innerWidth * 1.05 || w < 720
+			if (portrait) { cols = 2; rows = 6 }
+			else if (w < 1000) { cols = 3; rows = 4 }
+			const headerH = header.offsetHeight || 0
+			const available = Math.max(0, window.innerHeight - headerH - footerHeight - 12)
+			const rowH = Math.floor(available / rows)
+			rooms.style.height = available + 'px'
+			rooms.style.setProperty('grid-template-columns', `repeat(${cols}, 1fr)`)
+			rooms.style.setProperty('grid-template-rows', `repeat(${rows}, ${rowH}px)`)
+			// set CSS var for per-row height so we can cap .room max-height
+			rooms.style.setProperty('--display-row-height', rowH + 'px')
+			if (portrait) rooms.classList.add('two-cols')
+			else rooms.classList.remove('two-cols')
+			rooms.style.overflow = 'hidden'
+		}
+
+		window.addEventListener('resize', updateLayout)
+		window.addEventListener('orientationchange', updateLayout)
+		document.addEventListener('fullscreenchange', updateLayout)
+		setTimeout(updateLayout, 50)
+	} catch (e) { console.error('initDisplayLayout error', e) }
+}
+
+document.addEventListener('DOMContentLoaded', initDisplayLayout)
